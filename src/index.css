@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+:root {
+  font-family: "inter", sans-serif;
+}
+
+@theme {
+  --color-outer: #212124;
+  --color-inner: #27272a;
+  --color-primary: #f4f4f5;
+  --color-accent: #a9e851;
+  --color-muted: #a1a1aa;
+  --coor-green: #32ca5b;
+  --color-red: #ff3a33;
+}
+
+@layer utilities {
+  .primary-btn {
+    @apply bg-accent text-xs py-1.5 px-4 rounded-2xl cursor-pointer;
+  }
+  .rounded-sm {
+    @apply rounded-sm;
+  }
+}
+
+.chart-legend::-webkit-scrollbar {
+  display: none;
+}
