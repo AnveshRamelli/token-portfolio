@@ -11,7 +11,7 @@ const initialState: TokensState = savedState
   ? JSON.parse(savedState)
   : {
       watchlist: [],
-      lastUpdated: new Date().toISOString(),
+      lastUpdated: new Date().toLocaleTimeString(),
     };
 
 const tokensSlice = createSlice({
@@ -24,7 +24,7 @@ const tokensSlice = createSlice({
           state.watchlist.push(t);
         }
       });
-      state.lastUpdated = new Date().toISOString();
+      state.lastUpdated = new Date().toLocaleTimeString();
       localStorage.setItem('watchlist', JSON.stringify(state)); // persist
     },
 
@@ -34,13 +34,13 @@ const tokensSlice = createSlice({
         state.watchlist[idx].holdings = action.payload.holdings;
         state.watchlist[idx].value = state.watchlist[idx].currentPrice * action.payload.holdings;
       }
-      state.lastUpdated = new Date().toISOString();
+      state.lastUpdated = new Date().toLocaleTimeString();
       localStorage.setItem('watchlist', JSON.stringify(state)); // persist
     },
 
     deleteToken(state, action: PayloadAction<string>) {
       state.watchlist = state.watchlist.filter((t) => t.coinId !== action.payload);
-      state.lastUpdated = new Date().toISOString();
+      state.lastUpdated = new Date().toLocaleTimeString();
       localStorage.setItem('watchlist', JSON.stringify(state)); // persist
     },
   },
