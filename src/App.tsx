@@ -13,10 +13,10 @@ const App: React.FC = () => {
       <main className="mx-auto py-4 px-7">
         <section className="flex flex-col md:flex-row bg-inner shadow-md rounded-md p-4 gap-4">
           <div className="card flex-1">
-            <PortfolioSummary/>
+            <PortfolioSummary />
           </div>
           <div className="card flex-1">
-            <PortfolioChart/>
+            <PortfolioChart />
           </div>
         </section>
 
@@ -24,7 +24,6 @@ const App: React.FC = () => {
           <WatchListHeader />
         </section>
 
-        {/* Inner Container Two: Watchlist */}
         <section className="mt-5 bg-outer">
           <WatchlistTable />
         </section>

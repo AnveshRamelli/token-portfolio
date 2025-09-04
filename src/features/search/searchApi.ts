@@ -1,35 +1,33 @@
-// src/features/search/searchApi.ts
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { SearchResult } from './types';
-import { BASE_URL } from '../../lib/constants';
-
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import type { SearchResult } from "./types";
+import { BASE_URL } from "../../lib/constants";
 
 export const searchApi = createApi({
-  reducerPath: 'searchApi',
+  reducerPath: "searchApi",
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   endpoints: (builder) => ({
-    // GET /search/trending
+    // trending coins API
     getTrendingCoins: builder.query<SearchResult[], void>({
-      query: () => '/search/trending',
+      query: () => "/search/trending",
       transformResponse: (response: any) => {
-        return response.coins.map((c: any) => ({
-          coinId: c.item.id,
-          name: c.item.name,
-          symbol: c.item.symbol,
-          image: c.item.thumb,
+        return response.coins.map((coin: any) => ({
+          coinId: coin.item.id,
+          name: coin.item.name,
+          symbol: coin.item.symbol,
+          image: coin.item.thumb,
         })) as SearchResult[];
       },
     }),
 
-    // GET /search?query=bitcoin
+    // search coins API
     searchCoins: builder.query<SearchResult[], string>({
       query: (q) => `/search?query=${encodeURIComponent(q)}`,
       transformResponse: (response: any) => {
-        return response.coins.map((c: any) => ({
-          coinId: c.id,
-          name: c.name,
-          symbol: c.symbol,
-          image: c.thumb,
+        return response.coins.map((coin: any) => ({
+          coinId: coin.id,
+          name: coin.name,
+          symbol: coin.symbol,
+          image: coin.thumb,
         })) as SearchResult[];
       },
     }),

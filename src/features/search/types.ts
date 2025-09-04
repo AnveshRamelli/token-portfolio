@@ -7,5 +7,5 @@ export interface SearchResult {
 
 export interface SearchCache {
   trending: SearchResult[];
-  queryResults: Record<string, SearchResult[]>; // key = query string
+  queryResults: Record<string, SearchResult[]>;
 }

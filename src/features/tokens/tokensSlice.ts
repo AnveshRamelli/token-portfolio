@@ -1,8 +1,8 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { Token } from './types';
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import type { Token } from "./types";
 
 // --- Load initial state from localStorage ---
-const savedState = localStorage.getItem('watchlist');
+const savedState = localStorage.getItem("watchlist");
 interface TokensState {
   watchlist: Token[];
   lastUpdated: string;
@@ -15,33 +15,41 @@ const initialState: TokensState = savedState
     };
 
 const tokensSlice = createSlice({
-  name: 'tokens',
+  name: "tokens",
   initialState,
   reducers: {
     addTokens(state, action: PayloadAction<Token[]>) {
-      action.payload.forEach((t) => {
-        if (!state.watchlist.find((x) => x.coinId === t.coinId)) {
-          state.watchlist.push(t);
+      action.payload.forEach((token) => {
+        if (!state.watchlist.find((item) => item.coinId === token.coinId)) {
+          state.watchlist.push(token);
         }
       });
       state.lastUpdated = new Date().toLocaleTimeString();
-      localStorage.setItem('watchlist', JSON.stringify(state)); // persist
+      localStorage.setItem("watchlist", JSON.stringify(state)); // persist
     },
 
-    updateHoldings(state, action: PayloadAction<{ coinId: string; holdings: number }>) {
-      const idx = state.watchlist.findIndex((t) => t.coinId === action.payload.coinId);
-      if (idx !== -1) {
-        state.watchlist[idx].holdings = action.payload.holdings;
-        state.watchlist[idx].value = state.watchlist[idx].currentPrice * action.payload.holdings;
+    updateHoldings(
+      state,
+      action: PayloadAction<{ coinId: string; holdings: number }>
+    ) {
+      const index = state.watchlist.findIndex(
+        (token) => token.coinId === action.payload.coinId
+      );
+      if (index !== -1) {
+        state.watchlist[index].holdings = action.payload.holdings;
+        state.watchlist[index].value =
+          state.watchlist[index].currentPrice * action.payload.holdings;
       }
       state.lastUpdated = new Date().toLocaleTimeString();
-      localStorage.setItem('watchlist', JSON.stringify(state)); // persist
+      localStorage.setItem("watchlist", JSON.stringify(state)); // persist
     },
 
     deleteToken(state, action: PayloadAction<string>) {
-      state.watchlist = state.watchlist.filter((t) => t.coinId !== action.payload);
+      state.watchlist = state.watchlist.filter(
+        (token) => token.coinId !== action.payload
+      );
       state.lastUpdated = new Date().toLocaleTimeString();
-      localStorage.setItem('watchlist', JSON.stringify(state)); // persist
+      localStorage.setItem("watchlist", JSON.stringify(state)); // persist
     },
   },
 });
