@@ -3,7 +3,6 @@ import type { Token } from "./types";
 import { BASE_URL } from "../../lib/constants";
 
 // Fetch multiple coins by IDs
-
 export const tokensApi = createApi({
   reducerPath: "tokensApi",
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),

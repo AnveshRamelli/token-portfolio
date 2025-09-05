@@ -5,12 +5,12 @@ export interface Token {
   image: string;
   currentPrice: number;
   priceChange24h: number;
-  holdings: number;       // user input
-  value: number;          // currentPrice * holdings
-  sparkline: number[];    // 7-day price array
+  holdings: number;
+  value: number;
+  sparkline: number[];
 }
 
 export interface GlobalTokensState {
   watchlist: Token[];
-  lastUpdated: string; // global timestamp for any update
+  lastUpdated: string;
 }

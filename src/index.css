@@ -21,6 +21,9 @@
   .rounded-sm {
     @apply rounded-sm;
   }
+  .secondary-btn{
+    @apply text-sm text-muted border border-muted px-2 py-1 ;
+  }
 }
 
 .chart-legend::-webkit-scrollbar {
