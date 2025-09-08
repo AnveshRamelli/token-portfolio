@@ -1,14 +1,29 @@
 import { useAppSelector } from "../app/hooks";
 import { PieChart, Pie, Cell } from "recharts";
-import { selectChartData } from "../features/portfolio/portfolioSelectors";
+import {
+  selectChartData,
+  selectWalletAddress,
+} from "../features/portfolio/portfolioSelectors";
 
 const PortfolioChart = () => {
   const chartData = useAppSelector(selectChartData);
+  const walletAddress = useAppSelector(selectWalletAddress);
 
   return (
     <div>
       <p className="text-muted text-sm">Portfolio Total</p>
-      {chartData.length ? (
+      {!walletAddress && (
+        <div className="flex justify-center items-center mt-10 text-muted">
+          Please Connect Wallet to see your Portfolio chart
+        </div>
+      )}
+
+      {walletAddress && chartData.length === 0 && (
+        <div className="flex justify-center items-center mt-10 text-muted">
+          No data
+        </div>
+      )}
+      {walletAddress && chartData.length > 0 && (
         <div className="flex flex-col sm:flex-row">
           <div className="flex justify-center">
             <PieChart width={180} height={180}>
@@ -37,11 +52,9 @@ const PortfolioChart = () => {
             ))}
           </div>
         </div>
-      ) : (
-        <div className="flex justify-center items-center min-h-30 text-muted">No data</div>
       )}
     </div>
   );
-};  
+};
 
 export default PortfolioChart;

@@ -39,3 +39,6 @@ export const selectChartData = createSelector(
 // Last updated time
 export const selectLastUpdated = (state: RootState): string =>
   state.tokens.lastUpdated;
+
+export const selectWalletAddress = (state: RootState): string | null =>
+  state.wallet.address;
