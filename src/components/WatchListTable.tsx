@@ -21,7 +21,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { selectWatchlist } from "../features/portfolio/portfolioSelectors";
@@ -34,14 +33,15 @@ import {
 import { useEffect, useState } from "react";
 import { useLazyGetCoinsByIdsQuery } from "../features/tokens/tokensApi";
 
-// ---- Table Component ----
 const WatchlistTable = () => {
   const dispatch = useAppDispatch();
   const data = useAppSelector(selectWatchlist);
   const [fetchCoins, { data: fetchedTokens }] = useLazyGetCoinsByIdsQuery();
-  const watchlistIds = useAppSelector(selectWatchlist).map((t) => t.coinId);
+  const watchlistIds = useAppSelector(selectWatchlist).map(
+    (token) => token.coinId
+  );
 
-  // local state for editing
+  // local state for editing holdings
   const [editingRow, setEditingRow] = useState<string | null>(null);
   const [editValue, setEditValue] = useState<string>("");
 
@@ -150,7 +150,9 @@ const WatchlistTable = () => {
       accessorKey: "value",
       header: "Value",
       cell: ({ row }) => (
-        <span className="text-muted">{row.original.value || "-"}</span>
+        <span className="text-muted">
+          {row.original.value.toFixed(2) || "-"}
+        </span>
       ),
     },
     {
@@ -167,17 +169,25 @@ const WatchlistTable = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem>
-                <span className="flex items-center gap-2 text-sm p-2 text-muted cursor-pointer" onClick={() => {
-                  setEditingRow(token.coinId);
-                  setEditValue(token.holdings ? token.holdings.toString() : "");
-                }}>
+                <span
+                  className="flex items-center gap-2 text-sm p-2 text-muted cursor-pointer"
+                  onClick={() => {
+                    setEditingRow(token.coinId);
+                    setEditValue(
+                      token.holdings ? token.holdings.toString() : ""
+                    );
+                  }}
+                >
                   <Pencil className="h-4 w-4" /> Edit Holdings
                 </span>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <span className="flex items-center gap-2 text-sm p-2 text-red-500 cursor-pointer hover:bg-outer" onClick={() => {
-                   dispatch(deleteToken(token.coinId));
-                }}>
+                <span
+                  className="flex items-center gap-2 text-sm p-2 text-red-500 cursor-pointer hover:bg-outer"
+                  onClick={() => {
+                    dispatch(deleteToken(token.coinId));
+                  }}
+                >
                   <Trash2 className="h-4 w-4" /> Remove
                 </span>
               </DropdownMenuItem>
@@ -224,7 +234,6 @@ const WatchlistTable = () => {
         </TableBody>
       </Table>
 
-      {/* Footer */}
       <div className="flex items-center justify-between px-2 py-3 text-sm text-muted">
         <div>
           {table.getState().pagination.pageIndex *

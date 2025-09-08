@@ -1,6 +1,5 @@
-// src/components/AddTokenModal.tsx
 import { useState, useEffect } from "react";
-import { useAppDispatch } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { addTokens } from "../features/tokens/tokensSlice";
 import { useLazyGetCoinsByIdsQuery } from "../features/tokens/tokensApi";
 
@@ -9,6 +8,7 @@ import {
   DialogContent,
   DialogFooter,
   DialogHeader,
+  DialogTitle,
   DialogTrigger,
 } from "../components/ui/dialog";
 import { Input } from "../components/ui/input";
@@ -17,7 +17,8 @@ import {
   useGetTrendingCoinsQuery,
   useSearchCoinsQuery,
 } from "../features/search/searchApi";
-import { Plus } from "lucide-react";
+import { Plus, Star } from "lucide-react";
+import { selectWatchlist } from "../features/portfolio/portfolioSelectors";
 
 const AddTokenModal = () => {
   const dispatch = useAppDispatch();
@@ -25,8 +26,8 @@ const AddTokenModal = () => {
   const [query, setQuery] = useState("");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
+  const watchlist = useAppSelector(selectWatchlist);
 
-  // --- API hooks ---
   const { data: trending } = useGetTrendingCoinsQuery();
   const { data: searchResults } = useSearchCoinsQuery(query, { skip: !query });
   const listToShow = query ? searchResults || [] : trending || [];
@@ -34,20 +35,20 @@ const AddTokenModal = () => {
   const [triggerGetCoinsByIds, { data: fetchedTokens, isLoading }] =
     useLazyGetCoinsByIdsQuery();
 
-  // --- Toggle selection ---
+  const isInWatchlist = (id: string) =>
+    watchlist.some((token) => token.coinId === id);
+
   const toggleSelect = (id: string) => {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
   };
 
-  // --- Add selected tokens ---
   const handleAddSelected = () => {
     if (selectedIds.length === 0) return;
     triggerGetCoinsByIds(selectedIds);
   };
 
-  // --- Save to Redux when tokens fetched ---
   useEffect(() => {
     if (fetchedTokens?.length) {
       dispatch(addTokens(fetchedTokens));
@@ -59,6 +60,7 @@ const AddTokenModal = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTitle> </DialogTitle>
       <DialogTrigger>
         <span className="btn primary-btn rounded-sm flex items-center gap-1">
           <Plus width={12} />
@@ -67,8 +69,7 @@ const AddTokenModal = () => {
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-lg">
-        {/* Header */}
-        <DialogHeader className="bg-inner-bg">
+        <DialogHeader className="bg-inner">
           <Input
             className="text-muted"
             id="search"
@@ -78,34 +79,38 @@ const AddTokenModal = () => {
           />
         </DialogHeader>
 
-        {/* Token list */}
         <ScrollArea className="h-54 rounded-md bg-outer-bg">
           <div className="">
             {!query && <span className="text-muted text-xs px-2">trendig</span>}
-            {listToShow.map((c: any) => (
+            {listToShow.map((coin: any) => (
               <div
-                key={c.coinId}
+                key={coin.coinId}
                 className="flex items-center justify-between p-2 rounded-md hover:bg-outer cursor-pointer"
-                //  onClick={()=> toggleSelect(c.coinId)}
               >
                 <div className="flex items-center gap-2">
                   <img
-                    src={c.image}
-                    alt={c.name}
+                    src={coin.image}
+                    alt={coin.name}
                     className="h-6 w-6 rounded-full"
                   />
                   <span className="text-sm font-medium text-muted">
-                    {c.name} ({c.symbol})
+                    {coin.name} ({coin.symbol})
                   </span>
                 </div>
-                <div className="">
+                <div className="flex items-center gap-2">
+                  {isInWatchlist(coin.coinId) && (
+                    <Star className="w-3 h-3 text-accent fill-accent" />
+                  )}
                   <Input
                     type="checkbox"
-                    className={`rounded-full ${
-                      selectedIds.includes(c.coinId) ? "accent" : ""
+                    className={`rounded-full h-4 w-4 ${
+                      selectedIds.includes(coin.coinId) ? "accent" : ""
                     }`}
-                    checked={selectedIds.includes(c.coinId)}
-                    onChange={() => toggleSelect(c.coinId)}
+                    checked={
+                      selectedIds.includes(coin.coinId) ||
+                      isInWatchlist(coin.coidId)
+                    }
+                    onChange={() => toggleSelect(coin.coinId)}
                   />
                 </div>
               </div>
@@ -115,7 +120,11 @@ const AddTokenModal = () => {
         <DialogFooter>
           <div className="bg-inner flex justify-end">
             <button
-              className={`${selectedIds.length === 0 ?'secondary-btn cursor-not-allowed': 'primary-btn' } rounded-sm`}
+              className={`${
+                selectedIds.length === 0
+                  ? "secondary-btn cursor-not-allowed"
+                  : "primary-btn"
+              } rounded-sm`}
               disabled={selectedIds.length === 0 || isLoading}
               onClick={handleAddSelected}
             >

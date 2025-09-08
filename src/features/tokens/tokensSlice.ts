@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { Token } from "./types";
 
-// --- Load initial state from localStorage ---
+// Load initial state from localStorage
 const savedState = localStorage.getItem("watchlist");
 interface TokensState {
   watchlist: Token[];
