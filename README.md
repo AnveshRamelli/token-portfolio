@@ -1,69 +1,52 @@
-# React + TypeScript + Vite
+# 🪙 Token Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive token portfolio dashboard built with **React + Vite + Redux Toolkit**, styled with **Tailwind + shadcn/ui**, and integrated with **CoinGecko API** + **RainbowKit Wallet Connect**.
 
-Currently, two official plugins are available:
+The app allows users to connect a wallet, manage a token watchlist, track portfolio value in real-time, and view visual insights through a donut chart and sparklines.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 1. Portfolio dashboard
 
-## Expanding the ESLint configuration
+- Portfolio Total card with donut chart (colors match tokens).
+  Watchlist table with:
+  - Token (logo, name, symbol)
+  - Price (from CoinGecko)
+  - 24h % change (red/green)
+  - 7d sparkline chart
+  - Editable holdings
+  - Calculated Value (holdings × price)
+  - Row menu with actions
+- Refresh Prices button to reload data.
+- Pagination footer for table.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 2. Add Token (Modal)
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Search tokens via CoinGecko API.
+- Trending section.
+- Each row: logo, name, symbol, select radio.
+- Footer button **“Add to Watchlist”** enabled when at least 1 token is selected.
+- On save, tokens appear in Watchlist.
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### 3. State, Data & Persistence
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Global state with **Redux Toolkit**.
+- RTK Qyery for fetching data from APIs
+- Watchlist + holdings persisted in **localStorage**.
+- Portfolio Total auto-updates with latest prices.
+- Computed values:
+  - `Value = holdings × price`
+  - `Portfolio Total = sum(values)`
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 4. Wallet Connection
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Integrated with **wagmi + RainbowKit**.
+- On connect → shows connected wallet address.
+- Watchlist restores from localStorage.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Tech Stack
+
+- **React + Vite**
+- **Redux Toolkit** (state management)
+- **Tailwind CSS + shadcn/ui** (UI styling & components)
+- **Recharts** (donut + sparkline charts)
+- **CoinGecko API** (token data)
+- **wagmi + RainbowKit** (wallet connection)
