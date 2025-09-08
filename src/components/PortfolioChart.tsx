@@ -20,7 +20,7 @@ const PortfolioChart = () => {
 
       {walletAddress && chartData.length === 0 && (
         <div className="flex justify-center items-center mt-10 text-muted">
-          No data
+          Please Add tokens to your Watchlist to view your Portfolio chart
         </div>
       )}
       {walletAddress && chartData.length > 0 && (

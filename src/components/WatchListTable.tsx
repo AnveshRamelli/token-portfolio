@@ -205,6 +205,13 @@ const WatchlistTable = () => {
     getPaginationRowModel: getPaginationRowModel(),
   });
 
+  if (!data.length)
+    return (
+      <div className="rounded-xl borderbg-inner flex justify-center items-center mt-10 text-muted">
+        Please Add tokens to your Watchlist
+      </div>
+    );
+
   return (
     <div className="rounded-xl border border-gray-700 bg-inner">
       <Table className="text-muted">
