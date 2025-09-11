@@ -8,7 +8,7 @@ import './index.css';
 import App from './App.tsx';
 import { Provider } from 'react-redux';
 import { store } from './app/store.ts';
-import { config } from './wagmi.ts';
+import { config } from './features/wallet/walletConfig.ts';
 
 const queryClient = new QueryClient();
 
